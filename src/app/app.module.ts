@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -14,6 +15,7 @@ import { PostService } from './services/post.service';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpModule,
     NgxPaginationModule
   ],
