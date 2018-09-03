@@ -1,8 +1,9 @@
 <div class="posts">
   <ul>
-    <li *ngFor="let post of posts">
+    <li *ngFor="let post of posts | paginate: { itemsPerPage: 5, currentPage: p }">
       {{ post.title }} <hr> 
       {{ post.body }} 
     </li>
   </ul>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
 </div>
