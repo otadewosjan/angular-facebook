@@ -11,7 +11,7 @@ import { PostService } from './services/post.service';
 @NgModule({
   declarations: [
     AppComponent,
-    PostsComponent
+    PostsComponent,
   ],
   imports: [
     BrowserModule,

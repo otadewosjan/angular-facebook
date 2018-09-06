@@ -21,3 +21,9 @@ ul li {
 input {
     width: 35px;
 }
+
+button.onpage:focus{
+   color: blue;
+   background-color: white;
+   font-weight: bold;
+}

@@ -1,14 +1,20 @@
 <div class="posts">
-  <div class="control">
+  <!-- <div class="control">
     <label>Show:
-      <input type="number" class="input" min="0" [(ngModel)]="itemsPP">
+      <input type="number" class="input" min="0" [(ngModel)]="itemsPP" (input)="test(itemsPP)">
     </label>
-  </div>
+  </div> -->
   <ul>
-    <li *ngFor="let post of posts | paginate: { itemsPerPage: itemsPP, currentPage: p }">
+    <li *ngFor="let post of posts">
       {{ post.title }}
       <hr> {{ post.body }}
     </li>
   </ul>
-  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+
+  <div class="control">
+    <button (click)="onPrev(page)" [disabled]="page === 1" >Previous</button>
+    <button class="onpage" *ngFor="let page of pages" (click)="onPage(page)"> {{ page }} </button>
+    <button (click)="onNext(page)">Next</button>
+  </div>
+
 </div>
