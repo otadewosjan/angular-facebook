@@ -30,12 +30,22 @@ export class PostsComponent implements OnInit {
         }));
   }
 
-  test(num) {
-    console.log(num);
-  }
-
   postSlicer() {
     this.posts = this.allPosts.slice((this.page - 1) * this.itemsPP, this.page * this.itemsPP);
+  }
+
+  onPostNum(postNum) {
+    console.log(postNum);
+    
+    if (this.allPosts.length < this.page * this.itemsPP) {
+      this.loadPosts()
+        .then(() => this.checkPosts())
+        .then(() => {
+          this.postSlicer()
+        })
+    }
+    this.postSlicer()
+
   }
 
   setPages(page) {

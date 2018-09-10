@@ -1,11 +1,12 @@
 <div class="posts">
-  <!-- <div class="control">
+  <div class="control">
     <label>Show:
-      <input type="number" class="input" min="0" [(ngModel)]="itemsPP" (input)="test(itemsPP)">
+      <input type="number" class="input" min="0" [(ngModel)]="itemsPP" (input)="onPostNum(itemsPP)">
     </label>
-  </div> -->
+  </div>
   <ul>
     <li *ngFor="let post of posts">
+      {{ post.id }})
       {{ post.title }}
       <hr> {{ post.body }}
     </li>
