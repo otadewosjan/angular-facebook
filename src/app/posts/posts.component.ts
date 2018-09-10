@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { PostService } from '../services/post.service';
-import { Observable } from '../../../node_modules/rxjs/Observable';
 import 'rxjs/add/operator/do';
 
 @Component({
@@ -11,13 +10,13 @@ import 'rxjs/add/operator/do';
 export class PostsComponent implements OnInit {
   allPosts: Post[] = [];
   posts: Post[] = [];
-  itemsPP: number = 5;
-  p: number = 1;
+  itemsPerPage: number = 5;
+  firstItemOnPage: number = 0;
   total: number = 100;
   page: number = 1;
   pages: number[] = [1, 2, 3, 4, 5];
-  j = 0;
-  k = 2;
+  postsStart: number = 0;
+  postsEnd: number = 2;
 
   constructor(private postService: PostService) {
   }
@@ -25,27 +24,34 @@ export class PostsComponent implements OnInit {
   ngOnInit() {
     this.loadPosts()
       .then(() => this.checkPosts()
-        .then(() => {
-          this.postSlicer()
-        }));
+        .then(() => { this.postSlicer() }));
   }
 
   postSlicer() {
-    this.posts = this.allPosts.slice((this.page - 1) * this.itemsPP, this.page * this.itemsPP);
+    this.posts = this.allPosts.slice((this.page - 1) * this.itemsPerPage, this.page * this.itemsPerPage);
   }
 
-  onPostNum(postNum) {
-    console.log(postNum);
-    
-    if (this.allPosts.length < this.page * this.itemsPP) {
+  onPostNum() {
+    this.page = Math.floor(this.firstItemOnPage / this.itemsPerPage) + 1;
+
+    if (this.page >= 3) {
+      this.pages = [this.page - 2, this.page - 1, this.page, this.page + 1, this.page + 2];
+    } else {
+      this.pages = [1, 2, 3, 4, 5];
+    }
+
+    if (this.allPosts.length < this.page * this.itemsPerPage) {
       this.loadPosts()
         .then(() => this.checkPosts())
         .then(() => {
           this.postSlicer()
         })
     }
-    this.postSlicer()
+    this.postSlicer();
+  }
 
+  setFirstItemOnPage() {
+    this.firstItemOnPage = (this.page - 1) * this.itemsPerPage;
   }
 
   setPages(page) {
@@ -61,19 +67,18 @@ export class PostsComponent implements OnInit {
   onPrev(page) {
     if (this.page !== 1) {
       this.page -= 1;
-
       this.setPages(page);
-
       this.postSlicer()
+      this.setFirstItemOnPage();
     }
   }
 
   onNext(page) {
     this.page += 1;
-
     this.setPages(page);
+    this.setFirstItemOnPage();
 
-    if (this.allPosts.length < this.page * this.itemsPP) {
+    if (this.allPosts.length < this.page * this.itemsPerPage) {
       this.loadPosts()
         .then(() => this.checkPosts())
         .then(() => {
@@ -86,9 +91,14 @@ export class PostsComponent implements OnInit {
   onPage(page) {
     if (page >= 3) {
       this.pages = [page - 2, page - 1, page, page + 1, page + 2];
+    } else {
+      this.pages = [1, 2, 3, 4, 5];
     }
+
     this.page = page;
-    if (this.allPosts.length < this.page * this.itemsPP) {
+    this.setFirstItemOnPage();
+
+    if (this.allPosts.length < this.page * this.itemsPerPage) {
       this.loadPosts()
         .then(() => this.checkPosts())
         .then(() => {
@@ -99,13 +109,13 @@ export class PostsComponent implements OnInit {
   }
 
   checkPosts() {
-    if ((this.allPosts.length / this.page) < this.itemsPP) {
+    if ((this.allPosts.length / this.page) < this.itemsPerPage) {
       return this.loadPosts().then(() => { return this.checkPosts() });
     }
   }
 
   loadPosts() {
-    return this.getPosts(this.j, this.k)
+    return this.getPosts(this.postsStart, this.postsEnd)
       .then((res) => {
         for (let i = 0; i < 2; i++) {
           this.allPosts.push(res[i])
@@ -113,10 +123,10 @@ export class PostsComponent implements OnInit {
       })
   }
 
-  getPosts(j, k) {
+  getPosts(postsStart: number, postsEnd: number) {
     return new Promise((resolve) => {
-      this.postService.get("http://jsonplaceholder.typicode.com/posts", j, k)
-        .do(() => { this.j += 2; this.k += 2; })
+      this.postService.get("http://jsonplaceholder.typicode.com/posts", postsStart, postsEnd)
+        .do(() => { this.postsStart += 2; this.postsEnd += 2; })
         .subscribe(res => { resolve(res); })
     });
   }

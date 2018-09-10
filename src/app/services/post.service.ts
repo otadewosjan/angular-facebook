@@ -6,14 +6,12 @@ import { Observable } from '../../../node_modules/rxjs/Observable';
 @Injectable()
 export class PostService {
 
-  constructor(public http: Http) {
-    //console.log("Post service provided");
-  }
+  constructor(public http: Http) {}
 
-  get(postsUrl, j, k) {
+  get(postsUrl: string, sliceStart: number, sliceEnd: number) {
     return this.http.get(postsUrl)
       .map(val => val.json())
-      .map(res => res.slice(j,k));
+      .map(res => res.slice(sliceStart, sliceEnd));
   }
 
 }
