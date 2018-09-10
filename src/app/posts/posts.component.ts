@@ -31,81 +31,41 @@ export class PostsComponent implements OnInit {
     this.posts = this.allPosts.slice((this.page - 1) * this.itemsPerPage, this.page * this.itemsPerPage);
   }
 
-  onPostNum() {
-    this.page = Math.floor(this.firstItemOnPage / this.itemsPerPage) + 1;
-
-    if (this.page >= 3) {
-      this.pages = [this.page - 2, this.page - 1, this.page, this.page + 1, this.page + 2];
-    } else {
-      this.pages = [1, 2, 3, 4, 5];
-    }
-
-    if (this.allPosts.length < this.page * this.itemsPerPage) {
-      this.loadPosts()
-        .then(() => this.checkPosts())
-        .then(() => {
-          this.postSlicer()
-        })
-    }
-    this.postSlicer();
-  }
-
   setFirstItemOnPage() {
     this.firstItemOnPage = (this.page - 1) * this.itemsPerPage;
   }
 
   setPages(page) {
-    if (this.page > page && page >= 3) {
-      this.pages.push(page + 3);
-      this.pages.shift();
-    } else if ((this.page < page && page > 3)) {
-      this.pages.unshift(page - 3);
-      this.pages.pop();
-    }
-  }
-
-  onPrev(page) {
-    if (this.page !== 1) {
-      this.page -= 1;
-      this.setPages(page);
-      this.postSlicer()
-      this.setFirstItemOnPage();
-    }
-  }
-
-  onNext(page) {
-    this.page += 1;
-    this.setPages(page);
-    this.setFirstItemOnPage();
-
-    if (this.allPosts.length < this.page * this.itemsPerPage) {
-      this.loadPosts()
-        .then(() => this.checkPosts())
-        .then(() => {
-          this.postSlicer()
-        })
-    }
-    this.postSlicer()
-  }
-
-  onPage(page) {
     if (page >= 3) {
       this.pages = [page - 2, page - 1, page, page + 1, page + 2];
     } else {
       this.pages = [1, 2, 3, 4, 5];
     }
+  }
 
+  onPage(page) {
+    this.setPages(page);
     this.page = page;
     this.setFirstItemOnPage();
 
     if (this.allPosts.length < this.page * this.itemsPerPage) {
-      this.loadPosts()
+      return this.loadPosts()
         .then(() => this.checkPosts())
-        .then(() => {
-          this.postSlicer()
-        })
+        .then(() => { this.postSlicer() });
     }
     this.postSlicer()
+  }
+
+  onPostNum() {
+    this.page = Math.floor(this.firstItemOnPage / this.itemsPerPage) + 1;
+    this.setPages(this.page);
+
+    if (this.allPosts.length < this.page * this.itemsPerPage) {
+      return this.loadPosts()
+        .then(() => this.checkPosts())
+        .then(() => { this.postSlicer() });
+    }
+    this.postSlicer();
   }
 
   checkPosts() {

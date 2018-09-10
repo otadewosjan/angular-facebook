@@ -13,9 +13,9 @@
   </ul>
 
   <div class="control">
-    <button (click)="onPrev(page)" [disabled]="page === 1" >Previous</button>
+    <button (click)="onPage(page - 1)" [disabled]="page === 1" >Previous</button>
     <button class="onpage" *ngFor="let page of pages" (click)="onPage(page)"> {{ page }} </button>
-    <button (click)="onNext(page)">Next</button>
+    <button (click)="onPage(page + 1)">Next</button>
   </div>
 
 </div>

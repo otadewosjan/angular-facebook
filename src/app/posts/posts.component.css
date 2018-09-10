@@ -23,7 +23,5 @@ input {
 }
 
 button.onpage:focus{
-   color: blue;
-   background-color: white;
    font-weight: bold;
 }
