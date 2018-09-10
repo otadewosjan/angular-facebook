@@ -44,8 +44,8 @@ export class PostsComponent implements OnInit {
   }
 
   onPage(page) {
-    this.setPages(page);
     this.page = page;
+    this.setPages(this.page);
     this.setFirstItemOnPage();
 
     if (this.allPosts.length < this.page * this.itemsPerPage) {
@@ -53,19 +53,12 @@ export class PostsComponent implements OnInit {
         .then(() => this.checkPosts())
         .then(() => { this.postSlicer() });
     }
-    this.postSlicer()
+    this.postSlicer();
   }
 
-  onPostNum() {
+  onPostNumInput() {
     this.page = Math.floor(this.firstItemOnPage / this.itemsPerPage) + 1;
-    this.setPages(this.page);
-
-    if (this.allPosts.length < this.page * this.itemsPerPage) {
-      return this.loadPosts()
-        .then(() => this.checkPosts())
-        .then(() => { this.postSlicer() });
-    }
-    this.postSlicer();
+    this.onPage(this.page);
   }
 
   checkPosts() {
