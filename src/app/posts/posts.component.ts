@@ -11,6 +11,7 @@ export class PostsComponent implements OnInit {
   allPosts: Post[] = [];
   posts: Post[] = [];
   itemsPerPage: number = 5;
+  itemsPerPageInput: number = 5;
   firstItemOnPage: number = 0;
   total: number = 100;
   page: number = 1;
@@ -57,6 +58,10 @@ export class PostsComponent implements OnInit {
   }
 
   onPostNumInput() {
+    if (this.itemsPerPageInput !== null && this.itemsPerPageInput !== 0) {
+      this.itemsPerPage = this.itemsPerPageInput;
+    }
+    
     this.page = Math.floor(this.firstItemOnPage / this.itemsPerPage) + 1;
     this.onPage(this.page);
   }

@@ -1,7 +1,7 @@
 <div class="posts">
   <div class="control">
     <label>Show:
-      <input type="number" class="input" min="1" [(ngModel)]="itemsPerPage" (input)="onPostNumInput()">
+      <input type="number" class="input" min="1" max="50" [(ngModel)]="itemsPerPageInput" (input)="onPostNumInput()">
     </label>
   </div>
   <ul>
