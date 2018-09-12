@@ -1,0 +1,27 @@
+.posts {
+    border: 2px solid blue;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+ul {
+    list-style-position: inside;
+    list-style-type: none;
+}
+
+ul li {
+    margin: 35px 50px 0px 0px;
+    text-align: justify;
+}
+
+.control {
+    text-align: center;
+}
+
+input {
+    width: 35px;
+}
+
+button.onpage:focus{
+   font-weight: bold;
+}
