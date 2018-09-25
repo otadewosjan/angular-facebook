@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PostService } from '../services/post.service';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/catch';
 
 @Component({
   selector: 'app-posts',
@@ -18,6 +19,8 @@ export class PostsComponent implements OnInit {
   pages: number[] = [1, 2, 3, 4, 5];
   postsStart: number = 0;
   postsEnd: number = 2;
+  postsAPI1: string = "http://localhost:3000/posts";
+  postsAPI2: string = "http://jsonplaceholder.typicode.com/posts";
 
   constructor(private postService: PostService) {
   }
@@ -61,7 +64,7 @@ export class PostsComponent implements OnInit {
     if (this.itemsPerPageInput !== null && this.itemsPerPageInput !== 0) {
       this.itemsPerPage = this.itemsPerPageInput;
     }
-    
+
     this.page = Math.floor(this.firstItemOnPage / this.itemsPerPage) + 1;
     this.onPage(this.page);
   }
@@ -83,12 +86,21 @@ export class PostsComponent implements OnInit {
 
   getPosts(postsStart: number, postsEnd: number) {
     return new Promise((resolve) => {
-      this.postService.get("http://jsonplaceholder.typicode.com/posts", postsStart, postsEnd)
+      this.postService.get(this.postsAPI1, postsStart, postsEnd)
+        .catch((e: any) => {throw(this.errorHandler(e))})
+
         .do(() => { this.postsStart += 2; this.postsEnd += 2; })
         .subscribe(res => { resolve(res); })
     });
   }
+
+  errorHandler(e) {
+    this.postsAPI1 = this.postsAPI2;
+    this.ngOnInit();
+  }
+
 }
+
 
 interface Post {
   id: number,
