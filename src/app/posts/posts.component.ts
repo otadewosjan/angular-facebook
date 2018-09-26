@@ -87,20 +87,19 @@ export class PostsComponent implements OnInit {
   getPosts(postsStart: number, postsEnd: number) {
     return new Promise((resolve) => {
       this.postService.get(this.postsAPI1, postsStart, postsEnd)
-        .catch((e: any) => {throw(this.errorHandler(e))})
+        .catch((err: any) => {throw(this.errorHandler(err))})
 
         .do(() => { this.postsStart += 2; this.postsEnd += 2; })
         .subscribe(res => { resolve(res); })
     });
   }
 
-  errorHandler(e) {
+  errorHandler(err) {
     this.postsAPI1 = this.postsAPI2;
     this.ngOnInit();
   }
 
 }
-
 
 interface Post {
   id: number,
