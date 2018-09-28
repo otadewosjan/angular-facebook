@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PostService } from '../services/post.service';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/catch';
 
 @Component({
   selector: 'app-posts',
@@ -61,7 +62,7 @@ export class PostsComponent implements OnInit {
     if (this.itemsPerPageInput !== null && this.itemsPerPageInput !== 0) {
       this.itemsPerPage = this.itemsPerPageInput;
     }
-    
+
     this.page = Math.floor(this.firstItemOnPage / this.itemsPerPage) + 1;
     this.onPage(this.page);
   }
@@ -83,11 +84,19 @@ export class PostsComponent implements OnInit {
 
   getPosts(postsStart: number, postsEnd: number) {
     return new Promise((resolve) => {
-      this.postService.get("http://jsonplaceholder.typicode.com/posts", postsStart, postsEnd)
+      this.postService.get(postsStart, postsEnd)
+        .catch((err: any) => {throw(this.getAlternativeApiServer(err))})
+
         .do(() => { this.postsStart += 2; this.postsEnd += 2; })
         .subscribe(res => { resolve(res); })
     });
   }
+
+  getAlternativeApiServer(err) {
+    this.postService.apiServer = "http://jsonplaceholder.typicode.com/posts";
+    this.ngOnInit();
+  }
+
 }
 
 interface Post {
