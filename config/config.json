@@ -1,0 +1,5 @@
+{
+    "apiServer": {
+        "posts": "http://localhost:3000/posts"
+    }
+}

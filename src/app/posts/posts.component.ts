@@ -19,8 +19,6 @@ export class PostsComponent implements OnInit {
   pages: number[] = [1, 2, 3, 4, 5];
   postsStart: number = 0;
   postsEnd: number = 2;
-  postsAPI1: string = "http://localhost:3000/posts";
-  postsAPI2: string = "http://jsonplaceholder.typicode.com/posts";
 
   constructor(private postService: PostService) {
   }
@@ -86,16 +84,16 @@ export class PostsComponent implements OnInit {
 
   getPosts(postsStart: number, postsEnd: number) {
     return new Promise((resolve) => {
-      this.postService.get(this.postsAPI1, postsStart, postsEnd)
-        .catch((err: any) => {throw(this.errorHandler(err))})
+      this.postService.get(postsStart, postsEnd)
+        .catch((err: any) => {throw(this.getAlternativeApiServer(err))})
 
         .do(() => { this.postsStart += 2; this.postsEnd += 2; })
         .subscribe(res => { resolve(res); })
     });
   }
 
-  errorHandler(err) {
-    this.postsAPI1 = this.postsAPI2;
+  getAlternativeApiServer(err) {
+    this.postService.apiServer = "http://jsonplaceholder.typicode.com/posts";
     this.ngOnInit();
   }
 
